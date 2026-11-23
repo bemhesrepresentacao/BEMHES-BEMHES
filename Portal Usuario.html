@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEMHES 2027 — Portal de Gestão e Operações</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        creme: '#F7F3EA',
+                        cremeEscuro: '#ECE5D5',
+                        trator: '#D9531E',
+                        tratorHover: '#B84214',
+                        petroleo: '#1E4863',
+                        petroleoHover: '#153448',
+                        aco: '#1C2226',
+                        ambar: '#E08E2B',
+                    },
+                    fontFamily: {
+                        display: ['Oswald', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F7F3EA;
+            background-image: radial-gradient(#d8cfbc 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #1C2226;
+        }
+        .card-industrial {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom-width: 6px;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #ECE5D5; }
+        ::-webkit-scrollbar-thumb { background: #1E4863; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D9531E; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-trator selection:text-white">
+
+    <!-- CABEÇALHO ORIGINAL MANTIDO -->
+    <header class="w-full bg-aco text-white shadow-lg border-b-4 border-trator">
+        <div class="bg-petroleo/90 border-b border-white/10">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-creme/90 gap-2">
+                <div class="flex items-center gap-2 font-medium">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-ambar animate-pulse"></span>
+                    <span>BEMHES 2027 — Soluções em Lubrificação Industrial, Agrícola e Automotiva</span>
+                </div>
+                <div class="flex items-center gap-4 text-creme/80">
+                    <span id="data-atual" class="hidden md:inline"></span>
+                    <span class="px-2 py-0.5 rounded bg-aco/60 text-ambar font-semibold text-xs border border-ambar/30">
+                        Sistema Operacional
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-creme text-aco py-6 sm:py-8 px-4 sm:px-6 border-b border-aco/15">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex-shrink-0 flex justify-center">
+                    <div class="rounded-2xl overflow-hidden shadow-md border-2 border-aco/15 bg-[#F7F3EA] p-1">
+                        <img src="MARCAO DA GRAXA.jpg" alt="Logo Oficial Marcão da Graxa" style="width: 100px; height: auto;"
+                             class="object-contain block rounded-xl"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x400/F7F3EA/1C2226?text=MARCÃO+DA+GRAXA.jpg';">
+                    </div>
+                </div>
+
+                <div class="text-center md:text-left flex-1 md:pl-6">
+                    <!-- ALTERE O TÍTULO DO MÓDULO AQUI (EX: CLIENTE, MUNICÍPIO, COBRANÇA, ETC.) -->
+                    <h4 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-aco leading-none mb-3">
+                        BEMHES <span class="text-trator">CLIENTE</span>
+                    </h4>
+                    <p class="text-aco/80 text-base sm:text-lg max-w-2xl leading-relaxed">
+                        Lubrificantes e Manutenção Especializada — Linha Pesada, Agrícola e Industrial.
+                    </p>
+                </div>
+
+                <nav>
+                    <a href="index.html"
+                       class="inline-flex items-center gap-2 rounded-lg bg-[#944b20] px-5 py-3 text-white font-semibold shadow-lg transition-all duration-300 hover:bg-[#783b19] hover:shadow-xl hover:-translate-x-1"
+                       title="Voltar para a página inicial">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span>Voltar</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- CORPO DA PÁGINA -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10">
+
+        <!-- Menu de Navegação Rápida entre as 8 Abas -->
+        <div id="barra-navegacao-abas" class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 border-b border-aco/10"></div>
+
+        <!-- Barra de Título e Ações CRUD -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-6 gap-4 border-b-2 border-aco/10 pb-5">
+            <div>
+                <!-- ALTERE O TÍTULO DA SEÇÃO AQUI -->
+                <h2 class="font-display text-2xl sm:text-3xl font-bold uppercase text-petroleo tracking-wide flex items-center gap-2.5">
+                    <span class="w-3 h-8 bg-trator rounded-sm inline-block"></span>
+                    Base de Clientes
+                </h2>
+                <p class="text-sm text-aco/70 mt-1 flex items-center gap-2">
+                    <span id="status-planilha" class="inline-flex items-center gap-1.5 font-medium text-petroleo">
+                        <span class="w-2 h-2 rounded-full bg-ambar animate-ping"></span>
+                        Sincronizando dados com a planilha Google...
+                    </span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5">
+                <button type="button" id="btn-config-api" onclick="abrirModalConfigApi()"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold transition-all shadow-sm">
+                    <i data-lucide="plug" class="w-4 h-4"></i>
+                    <span>Conectar Apps Script</span>
+                </button>
+
+                <button type="button" onclick="recarregarPlanilha()"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cremeEscuro hover:bg-aco hover:text-white text-aco text-sm font-semibold border border-aco/20 transition-all shadow-sm">
+                    <i data-lucide="refresh-cw" class="w-4 h-4 text-petroleo"></i>
+                    <span>Sincronizar</span>
+                </button>
+
+                <button type="button" onclick="abrirModalFormulario('novo')"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-trator hover:bg-tratorHover text-white text-sm font-bold shadow-md hover:shadow-lg transition-all">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Adicionar Novo</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Barra de Pesquisa -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-md border-2 border-aco/15 mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div class="relative flex-1">
+                <i data-lucide="search" class="w-5 h-5 text-aco/40 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="campo-busca" oninput="filtrarRegistros()"
+                       placeholder="Pesquisar em qualquer coluna desta aba..."
+                       class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-creme/60 border border-aco/20 text-sm text-aco placeholder-aco/50 focus:outline-none focus:border-petroleo focus:bg-white transition-colors">
+            </div>
+            <div class="px-3.5 py-2 rounded-xl bg-petroleo/10 text-petroleo font-bold border border-petroleo/20 text-sm text-center">
+                Total listado: <span id="contador-registros" class="text-trator">0</span>
+            </div>
+        </div>
+
+        <!-- Tabela de Dados -->
+        <div class="bg-white rounded-2xl shadow-lg border-2 border-aco/15 border-b-petroleo card-industrial overflow-hidden">
+            <div id="loading-box" class="py-16 px-4 text-center">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-petroleo/10 text-petroleo mb-4">
+                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold uppercase text-aco">Carregando dados da planilha...</h3>
+            </div>
+
+            <div id="tabela-wrapper" class="hidden overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr id="tabela-headers-row" class="bg-aco text-creme font-display uppercase text-sm tracking-wider border-b-2 border-trator"></tr>
+                    </thead>
+                    <tbody id="tabela-corpo" class="divide-y divide-aco/10 text-sm"></tbody>
+                </table>
+            </div>
+
+            <div id="empty-box" class="hidden py-14 px-4 text-center">
+                <h3 class="font-display text-xl font-bold uppercase text-aco">Nenhum registro encontrado</h3>
+                <p class="text-sm text-aco/60 mt-1">Ajuste a busca ou clique em "Adicionar Novo".</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- RODAPÉ ORIGINAL MANTIDO -->
+    <footer class="bg-aco text-creme border-t-4 border-trator mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-1">
+                        <span class="w-3 h-3 rounded-sm bg-trator inline-block"></span>
+                        <span class="font-display text-xl font-bold uppercase tracking-wider text-white">BEMHES 2027</span>
+                    </div>
+                    <p class="text-sm text-creme/75">Lubrificantes e Manutenção Especializada — Linha Pesada, Agrícola e Industrial.</p>
+                </div>
+                <div class="flex flex-wrap justify-center md:justify-end gap-4 sm:gap-6 text-sm text-creme/80">
+                    <div class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-trator"></i><span>Atendimento Técnico & Comercial</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-ambar"></i><span>Qualidade Garantida</span></div>
+                </div>
+            </div>
+            <div class="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-creme/60 gap-2">
+                <p>&copy; <span id="ano-atual">2026</span> BEMHES 2027. Todos os direitos reservados.</p>
+                <p>Portal Administrativo v2.0</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: CONSULTA + VÍNCULOS DO DIAGRAMA -->
+    <div id="modal-detalhes" class="fixed inset-0 z-50 hidden items-center justify-center bg-aco/75 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-creme border-2 border-aco rounded-2xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl relative my-8">
+            <div class="flex items-start justify-between border-b border-aco/15 pb-4 mb-5 gap-4">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span id="detalhe-id-badge" class="inline-block px-2.5 py-0.5 rounded bg-petroleo/15 text-petroleo font-mono font-bold text-xs uppercase">ID: ---</span>
+                        <span id="detalhe-aba-badge" class="inline-block px-2.5 py-0.5 rounded bg-trator/15 text-trator font-bold text-xs uppercase">ABA: ---</span>
+                    </div>
+                    <h3 id="detalhe-titulo-nome" class="font-display text-2xl font-bold uppercase text-aco">Detalhes</h3>
+                </div>
+                <button type="button" onclick="fecharModalDetalhes()" class="p-2 rounded-lg hover:bg-aco/10 text-aco"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="max-h-[60vh] overflow-y-auto pr-1">
+                <div id="detalhes-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+                <div id="detalhes-relacionamentos"></div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-aco/15 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <button type="button" id="btn-detalhe-editar" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-petroleo hover:bg-petroleoHover text-white text-xs sm:text-sm font-bold"><i data-lucide="pencil" class="w-4 h-4"></i><span>Editar</span></button>
+                    <button type="button" id="btn-detalhe-excluir" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-bold"><i data-lucide="trash-2" class="w-4 h-4"></i><span>Excluir</span></button>
+                </div>
+                <button type="button" onclick="fecharModalDetalhes()" class="px-5 py-2 rounded-xl text-sm font-bold bg-aco text-creme hover:bg-black">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: FORMULÁRIO ADICIONAR / EDITAR -->
+    <div id="modal-formulario" class="fixed inset-0 z-50 hidden items-center justify-center bg-aco/75 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-creme border-2 border-aco rounded-2xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl relative my-8">
+            <div class="flex items-center justify-between border-b border-aco/15 pb-4 mb-5">
+                <div class="flex items-center gap-3">
+                    <div id="form-icon-box" class="w-10 h-10 rounded-xl bg-trator text-white flex items-center justify-center"><i data-lucide="plus-circle" class="w-5 h-5"></i></div>
+                    <div>
+                        <h3 id="form-titulo" class="font-display text-xl sm:text-2xl font-bold uppercase text-aco">Novo Registro</h3>
+                        <p id="form-subtitulo" class="text-xs text-aco/70">Preencha os campos abaixo</p>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharModalFormulario()" class="p-2 rounded-lg hover:bg-aco/10 text-aco"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form onsubmit="salvarRegistro(event)">
+                <input type="hidden" id="registro-index-edicao" value="-1">
+                <input type="hidden" id="registro-modo-edicao" value="novo">
+                <div id="form-campos-dinamicos" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-1"></div>
+                <div class="mt-6 pt-4 border-t border-aco/15 flex items-center justify-end gap-3">
+                    <button type="button" onclick="fecharModalFormulario()" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-aco/75 hover:bg-aco/10">Cancelar</button>
+                    <button type="submit" id="btn-submit-form" class="px-6 py-2.5 rounded-xl text-sm font-bold bg-trator hover:bg-tratorHover text-white shadow-md flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i><span>Salvar na Planilha</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div id="modal-excluir" class="fixed inset-0 z-50 hidden items-center justify-center bg-aco/75 backdrop-blur-sm p-4">
+        <div class="bg-creme border-2 border-red-600 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <h3 class="font-display text-xl font-bold uppercase text-aco mb-2">Confirmar Exclusão</h3>
+            <p class="text-sm text-aco/85 mb-6">Deseja realmente excluir <strong id="excluir-nome-registro" class="text-red-700">---</strong> da planilha?</p>
+            <div class="flex items-center justify-end gap-3">
+                <button type="button" onclick="fecharModalExcluir()" class="px-4 py-2 rounded-xl text-sm font-semibold text-aco/80 hover:bg-aco/10">Cancelar</button>
+                <button type="button" id="btn-confirmar-exclusao" class="px-5 py-2 rounded-xl text-sm font-bold bg-red-600 hover:bg-red-700 text-white shadow-md flex items-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i><span>Sim, Excluir</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CONFIGURAR URL DO APPS SCRIPT -->
+    <div id="modal-config-api" class="fixed inset-0 z-50 hidden items-center justify-center bg-aco/75 backdrop-blur-sm p-4">
+        <div class="bg-creme border-2 border-aco rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <h3 class="font-display text-xl font-bold uppercase text-aco mb-2">Conectar Google Apps Script</h3>
+            <p class="text-xs text-aco/75 mb-4">Cole a URL do App da Web gerada ao implantar o <code>Code.gs</code> na sua Planilha Google para habilitar gravação, edição e exclusão reais.</p>
+            <form onsubmit="salvarConfigApi(event)">
+                <input type="url" id="input-url-apps-script" placeholder="https://script.google.com/macros/s/.../exec"
+                       class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-aco/25 text-sm text-aco mb-4">
+                <div class="flex items-center justify-end gap-3">
+                    <button type="button" onclick="fecharModalConfigApi()" class="px-4 py-2 rounded-xl text-sm font-semibold text-aco/80 hover:bg-aco/10">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-bold bg-petroleo hover:bg-petroleoHover text-white">Salvar Conexão</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 hidden items-center gap-2.5 bg-aco text-white px-4 py-3 rounded-xl shadow-xl border-l-4 border-trator text-sm font-medium">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-ambar"></i>
+        <span id="toast-msg">Operação realizada!</span>
+    </div>
+
+    <script src="bemhes-core.js"></script>
+    <script src="bemhes-ui.js"></script>
+    <script>
+        // TROQUE O NOME DA ABA ABAIXO CONFORME A PÁGINA:
+        // 'CLIENTES' | 'MUNICIPIO' | 'Código de Industria' | 'Clientes Endereço Cobrança'
+        // 'Clientes Endereço Entrega' | 'GRUPO FAMILIAR' | 'USUÁRIO' | 'COMPRADOR'
+        window.addEventListener('DOMContentLoaded', () => iniciarPaginaEntidade('CLIENTES'));
+    </script>
+</body>
+</html>
