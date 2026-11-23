@@ -18,7 +18,7 @@ const PUBHTML_INDUSTRIA_AUX_URL = `https://docs.google.com/spreadsheets/d/e/${PU
 
 // 2. URL DO GOOGLE APPS SCRIPT (ESCRITA: ADICIONAR / EDITAR / EXCLUIR NA PLANILHA)
 // Cole aqui a URL gerada ao implantar o Code.gs como App da Web, ou configure pelo botão "API Planilha" no topo da página!
-const APPS_SCRIPT_URL_PADRAO = '';
+const APPS_SCRIPT_URL_PADRAO = 'https://script.google.com/macros/s/AKfycbxybMag74ZgUhypNgQIiZ5-pJRnhzYPoW4S2r2D8A-C7oUrg8uBbl5sDdI47UGEeK27/exec';
 const STORAGE_SCRIPT_URL_KEY = 'bemhes_2027_apps_script_url';
 
 function obterUrlAppsScript() {
